@@ -100,7 +100,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxBox2d\libs;..\..\..\addons\ofxBox2d\libs\Box2D;..\..\..\addons\ofxBox2d\libs\Box2D\Collision;..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes;..\..\..\addons\ofxBox2d\libs\Box2D\Common;..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics;..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts;..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints;..\..\..\addons\ofxBox2d\libs\Box2D\Rope;..\..\..\addons\ofxBox2d\libs\triangle;..\..\..\addons\ofxBox2d\src;..\..\..\addons\ofxMaxim\libs;..\..\..\addons\ofxMaxim\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\adria\OneDrive\00_Development\08_OpenFrameworks\00_openFrameworks\apps\myApps\GGJ19_Procedural_Game;%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxBox2d\libs;..\..\..\addons\ofxBox2d\libs\Box2D;..\..\..\addons\ofxBox2d\libs\Box2D\Collision;..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes;..\..\..\addons\ofxBox2d\libs\Box2D\Common;..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics;..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts;..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints;..\..\..\addons\ofxBox2d\libs\Box2D\Rope;..\..\..\addons\ofxBox2d\libs\triangle;..\..\..\addons\ofxBox2d\src;..\..\..\addons\ofxMaxim\libs;..\..\..\addons\ofxMaxim\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <AdditionalOptions>-DNO_TIMER</AdditionalOptions>

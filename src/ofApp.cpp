@@ -21,7 +21,7 @@ void ofApp::setup() {
 
 	/* CODE FOR BOX 2D */
 	img.allocate(40, 30, OF_IMAGE_GRAYSCALE);
-	color = ofColor(255, 0, 0, 127);
+	color = ofColor(255, 0, 0, 60);
 
 	box2d.init();
 	box2d.enableEvents();   // <-- turn on the event listener
@@ -200,7 +200,6 @@ void ofApp::draw() {
 
 	}
 
-
 	// synth draw
 	ofBackground(ofColor(100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, SynthEngine.noiseGain));
 	ofSetColor(ofColor::purple);
@@ -209,7 +208,7 @@ void ofApp::draw() {
 
 	/* BOX 2D CODE */
 	ofSetColor(color);
-	ofBackgroundGradient(ofColor::white, ofColor::black, OF_GRADIENT_CIRCULAR);
+	//ofBackgroundGradient(ofColor::white, ofColor::black, OF_GRADIENT_CIRCULAR);
 	img.draw(0, 0, ofGetWidth(), ofGetHeight());
 
 	for (size_t i = 0; i < circles.size(); i++) {
