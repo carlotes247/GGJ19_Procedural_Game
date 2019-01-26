@@ -51,6 +51,11 @@ xcuserdata/
 *.aps
 ipch/
 
+# Database files that are not needed
+/.vs/GGJ19_Procedural_Game/v15/*.db
+/.vs/GGJ19_Procedural_Game/v15/*.db-shm
+/.vs/GGJ19_Procedural_Game/v15/*.db-wal
+
 # Eclipse
 .metadata
 local.properties
