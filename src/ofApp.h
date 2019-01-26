@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Life.h"
 #include "LevelController.h"
+#include "synthProcedural.h"
 
 class ofApp : public ofBaseApp {
 
@@ -28,6 +29,13 @@ public:
 	string game_state;
 	int score;
 	Player player_1;
-
-
+	
+	// synth
+	void audioOut(ofSoundBuffer &outBuffer);
+	std::mutex audioMutex;
+	ofSoundStream soundStream;
+	ofSoundBuffer lastBuffer;
+	ofPolyline waveform;
+	float rms;
+	synthProcedural SynthEngine;
 };

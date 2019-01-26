@@ -100,7 +100,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\..\..\addons\ofxMaxim\libs;..\..\..\addons\ofxMaxim\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\adria\OneDrive\00_Development\08_OpenFrameworks\00_openFrameworks\apps\myApps\GGJ19_Procedural_Game\src;C:\Users\adria\OneDrive\00_Development\08_OpenFrameworks\00_openFrameworks\apps\myApps\GGJ19_Procedural_Game;%(AdditionalIncludeDirectories);..\..\..\addons\ofxMaxim\libs;..\..\..\addons\ofxMaxim\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
@@ -193,6 +193,7 @@
     <ClCompile Include="..\..\..\addons\ofxMaxim\libs\maxiMFCC.cpp" />
     <ClCompile Include="..\..\..\addons\ofxMaxim\libs\maximilian.cpp" />
     <ClCompile Include="..\..\..\addons\ofxMaxim\libs\stb_vorbis.c" />
+    <ClCompile Include="synthProcedural.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelController.h" />
@@ -209,6 +210,7 @@
     <ClInclude Include="..\..\..\addons\ofxMaxim\libs\maximilian.h" />
     <ClInclude Include="..\..\..\addons\ofxMaxim\libs\sineTable.h" />
     <ClInclude Include="..\..\..\addons\ofxMaxim\libs\stb_vorbis.h" />
+    <ClInclude Include="synthProcedural.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">

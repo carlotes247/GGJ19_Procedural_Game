@@ -34,6 +34,7 @@
     <ClCompile Include="LevelController.cpp" />
     <ClCompile Include="Life.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="synthProcedural.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -89,6 +90,7 @@
     <ClInclude Include="LevelController.h" />
     <ClInclude Include="Life.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="synthProcedural.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
