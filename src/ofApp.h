@@ -15,6 +15,7 @@ public:
 	bool bIsPlayer;
 	bool bRend;
 	int colourID;
+	int shapeID;
 	shared_ptr<ofxBox2dCircle> refCirc;
 };
 

@@ -21,7 +21,7 @@ void ofApp::setup() {
 
 	/* CODE FOR BOX 2D */
 	img.allocate(40, 30, OF_IMAGE_GRAYSCALE);
-	color = ofColor(255, 0, 0, 60);
+	color = ofColor(230, 230, 230, 60);
 
 	box2d.init();
 	box2d.enableEvents();   // <-- turn on the event listener
@@ -38,7 +38,7 @@ void ofApp::setup() {
 	for (int i = 0; i < 20; i++) {
 		shared_ptr <ofxBox2dCircle> c = shared_ptr <ofxBox2dCircle>(new ofxBox2dCircle);
 		c.get()->setPhysics(1, 0.5, 0.9);
-		c.get()->setup(box2d.getWorld(), (ofGetWidth() / 2) + ofRandom(-300, 300), (ofGetHeight() / 2) + ofRandom(-300, 300), 30);
+		c.get()->setup(box2d.getWorld(), (ofGetWidth() / 2) + ofRandom(-400, 400), (ofGetHeight() / 2) + ofRandom(-400, 400), 20);
 
 		c.get()->setData(new HitData());
 		HitData * sd = (HitData*)c.get()->getData();
@@ -46,7 +46,8 @@ void ofApp::setup() {
 		sd->bIsPlayer = false;
 		sd->bRend = true;
 		sd->refCirc = c;
-		sd->colourID = rand() % 5;
+		sd->colourID = rand() % 6;
+		sd->shapeID = rand() % 3;
 		circles.push_back(c);
 	}
 
@@ -60,7 +61,8 @@ void ofApp::setup() {
 	hd->bIsPlayer = true;
 	hd->bRend = true;
 	hd->refCirc = playerCircle;
-	hd->colourID = rand() % 5;
+	hd->colourID = rand() % 6;
+	hd->shapeID = 0;
 	circles.push_back(playerCircle);
 
 }
@@ -243,16 +245,54 @@ void ofApp::draw() {
 		else ofSetHexColor(col); //0x4ccae9
 
 		//if we don't want to show circles, just don't draw them. collision and everything else (should) still works.
+		
+
 		if (data->bRend) {
-			circles[i].get()->draw();
+			float x = circles[i].get()->getPosition().x;
+			float y = circles[i].get()->getPosition().y;
+			if (data->bIsPlayer == false) {
+				// (x, y) of center;
+	//random point 1 (top) 
+				float x1 = x + ofRandom(-20, 20);
+				float y1 = y +ofRandom(-100, 100);
+				//random point 2 (left)
+				float x2 = x + ofRandom(-50, -70);
+				float y2 = y + ofRandom(-70, 70);
+				//random point 3 (right)
+				float x3 = x + ofRandom(50, 70);
+				float y3 = y + ofRandom(-70, 70);
+				switch (data->shapeID) {
+				case 0:
+					//circle
+					ofDrawCircle(x, y, ofRandom(10, 70));
+					break;
+				case 1:
+					ofDrawRectangle(x, y, ofRandom(-70, 70), ofRandom(-70, 70));
+					//rectangle
+					break;
+				case 2:
+
+					//triangle
+					ofDrawTriangle(x1, y1, x2, y2, x3, y3);
+					break;
+				default:
+					ofDrawCircle(x, y, (float)40);
+					break;
+
+				}
+			}
+			else {
+				ofDrawCircle(x,y,data->refCirc.get()->getRadius() + ofRandom(30));
+			}
+			//circles[i].get()->draw();
 		}
 		//circles[i].get()->draw();
 	}
 
-	stringstream ss;
-	ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
-	ofSetHexColor(0xfffff);
-	ofDrawBitmapString(ss.str().c_str(), 100, 100);
+	//stringstream ss;
+	//ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
+	//ofSetHexColor(0xfffff);
+	//ofDrawBitmapString(ss.str().c_str(), 100, 100);
 
 }
 
