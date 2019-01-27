@@ -9,6 +9,14 @@ void Player::setup(float radius)
 	height = radius;
 }
 
+void Player::update()
+{
+}
+
+void Player::draw()
+{
+}
+
 Player::Player()
 {
 }

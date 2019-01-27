@@ -126,62 +126,66 @@ void ofApp::contactEnd(ofxBox2dContactArgs &e) {
 //--------------------------------------------------------------
 void ofApp::update() {
 
-	//	synth audio thread
-	unique_lock<mutex> lock(audioMutex);
-
-	//	synth geometry drawing
-	waveform.clear();
-	for (size_t i = 0; i < lastBuffer.getNumFrames(); i++) {
-		float sample = lastBuffer.getSample(i, 0);
-		float r = ((2 - 2 * sin(i) + sin(i)*sqrt(abs(cos(i))) / (sin(i) + 1.4)) * -80 * (100 * SynthEngine.noiseGain));
-		float x = ofGetWidth() / 2 + cos(i) * r * sample * (1 - (SynthEngine.noiseGain + 0.02));
-		float y = ofGetHeight() / 2 + sin(i) * r * sample;
-		waveform.addVertex(ofVec3f(x, y, 0));
-		waveform.close();
-	}
-	rms = lastBuffer.getRMSAmplitude();
-
 	if (game_state == "start")
 	{
 
 	}
 	else if (game_state == "game")
 	{
-		//player_1.update();
+		player_1.update();
+
+		//	synth audio thread
+		unique_lock<mutex> lock(audioMutex);
+
+		//	synth geometry drawing
+		waveform.clear();
+		for (size_t i = 0; i < lastBuffer.getNumFrames(); i++) {
+			float sample = lastBuffer.getSample(i, 0);
+			float r = ((2 - 2 * sin(i) + sin(i)*sqrt(abs(cos(i))) / (sin(i) + 1.4)) * -80 * (100 * SynthEngine.noiseGain));
+			float x = ofGetWidth() / 2 + cos(i) * r * sample * (1 - (SynthEngine.noiseGain + 0.02));
+			float y = ofGetHeight() / 2 + sin(i) * r * sample;
+			waveform.addVertex(ofVec3f(x, y, 0));
+			waveform.close();
+		}
+		rms = lastBuffer.getRMSAmplitude();
+
+
+		/* BOX 2D CODE */
+
+	//playerCircle.get()->addAttractionPoint(mouseX, mouseY, 10.0F);
+		playerCircle.get()->setPosition(mouseX, mouseY);
+		box2d.update();
+
+		float noiseScale = 0.5; //ofMap(mouseX, 0, ofGetWidth(), 0, 0.1);
+		float noiseVel = ofGetElapsedTimef();
+
+		//ofPixels & pixels = img.getPixels();
+
+		int w = img.getWidth();
+		int h = img.getHeight();
+		for (int y = 0; y < h; y++) {
+			for (int x = 0; x < w; x++) {
+				int i = y * w + x;
+				float noiseVelue = ofNoise(x * noiseScale, y * noiseScale, noiseVel);
+				img.getPixels()[i] = 255 * noiseVelue;
+			}
+		}
+		img.update();
+		/*
+		int i = 0;
+		while (i < img.getPixels().size()) {
+			img.getPixels()[i] = ofNoise(rand() % ofGetWidth(),rand() % ofGetHeight()) * 255.f; // make some op-art
+			i++;
+		}
+		img.update();
+		*/
+
+
 	}
 	else if (game_state == "end")
 	{
 	}
 
-	/* BOX 2D CODE */
-
-		//playerCircle.get()->addAttractionPoint(mouseX, mouseY, 10.0F);
-	playerCircle.get()->setPosition(mouseX, mouseY);
-	box2d.update();
-
-	float noiseScale = 0.5; //ofMap(mouseX, 0, ofGetWidth(), 0, 0.1);
-	float noiseVel = ofGetElapsedTimef();
-
-	//ofPixels & pixels = img.getPixels();
-
-	int w = img.getWidth();
-	int h = img.getHeight();
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
-			int i = y * w + x;
-			float noiseVelue = ofNoise(x * noiseScale, y * noiseScale, noiseVel);
-			img.getPixels()[i] = 255 * noiseVelue;
-		}
-	}
-	img.update();
-	/*
-	int i = 0;
-	while (i < img.getPixels().size()) {
-		img.getPixels()[i] = ofNoise(rand() % ofGetWidth(),rand() % ofGetHeight()) * 255.f; // make some op-art
-		i++;
-	}
-	img.update();
-	*/
 
 }
 
@@ -193,66 +197,68 @@ void ofApp::draw() {
 	}
 	else if (game_state == "game")
 	{
-		//player_1.draw();
+		player_1.draw();
+
+		// synth draw
+		ofBackground(ofColor(100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, SynthEngine.noiseGain));
+		ofSetColor(ofColor::purple);
+		ofSetLineWidth(1 + (rms * SynthEngine.noiseGain) * 0.1);
+		waveform.draw();
+
+		/* BOX 2D CODE */
+		ofSetColor(color);
+		//ofBackgroundGradient(ofColor::white, ofColor::black, OF_GRADIENT_CIRCULAR);
+		img.draw(0, 0, ofGetWidth(), ofGetHeight());
+
+		for (size_t i = 0; i < circles.size(); i++) {
+			ofFill();
+			HitData * data = (HitData*)circles[i].get()->getData();
+			//int random = rand() % 5;
+			int col = 0;
+			switch (data->colourID) {
+			case 0:
+				col = 0x9b42f4;
+				break;
+			case 1:
+				col = 0xd32828;
+				break;
+			case 2:
+				col = 0x66e228;
+				break;
+			case 3:
+				col = 0xefdd15;
+				break;
+			case 4:
+				col = 0x14ef85;
+				break;
+			case 5:
+				col = 0x4368ad;
+				break;
+			default:
+				col = 0xffffff;
+				break;
+			}
+			if (data && data->bHit) ofSetHexColor(0x000000);
+			else ofSetHexColor(col); //0x4ccae9
+
+			//if we don't want to show circles, just don't draw them. collision and everything else (should) still works.
+			if (data->bRend) {
+				circles[i].get()->draw();
+			}
+			//circles[i].get()->draw();
+		}
+
+		stringstream ss;
+		ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
+		ofSetHexColor(0xfffff);
+		ofDrawBitmapString(ss.str().c_str(), 100, 100);
+
 	}
 	else if (game_state == "end")
 	{
 
 	}
 
-	// synth draw
-	ofBackground(ofColor(100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, SynthEngine.noiseGain));
-	ofSetColor(ofColor::purple);
-	ofSetLineWidth(1 + (rms * SynthEngine.noiseGain) * 0.1);
-	waveform.draw();
-
-	/* BOX 2D CODE */
-	ofSetColor(color);
-	//ofBackgroundGradient(ofColor::white, ofColor::black, OF_GRADIENT_CIRCULAR);
-	img.draw(0, 0, ofGetWidth(), ofGetHeight());
-
-	for (size_t i = 0; i < circles.size(); i++) {
-		ofFill();
-		HitData * data = (HitData*)circles[i].get()->getData();
-		//int random = rand() % 5;
-		int col = 0;
-		switch (data->colourID) {
-		case 0:
-			col = 0x9b42f4;
-			break;
-		case 1:
-			col = 0xd32828;
-			break;
-		case 2:
-			col = 0x66e228;
-			break;
-		case 3:
-			col = 0xefdd15;
-			break;
-		case 4:
-			col = 0x14ef85;
-			break;
-		case 5:
-			col = 0x4368ad;
-			break;
-		default:
-			col = 0xffffff;
-			break;
-		}
-		if (data && data->bHit) ofSetHexColor(0x000000);
-		else ofSetHexColor(col); //0x4ccae9
-
-		//if we don't want to show circles, just don't draw them. collision and everything else (should) still works.
-		if (data->bRend) {
-			circles[i].get()->draw();
-		}
-		//circles[i].get()->draw();
-	}
-
-	stringstream ss;
-	ss << "FPS: " << ofToString(ofGetFrameRate(), 0) << endl << endl;
-	ofSetHexColor(0xfffff);
-	ofDrawBitmapString(ss.str().c_str(), 100, 100);
 
 }
 
@@ -260,19 +266,24 @@ void ofApp::draw() {
 // audio callback
 void ofApp::audioOut(ofSoundBuffer &outBuffer) {
 
-	for (size_t i = 0; i < outBuffer.getNumFrames(); i++) {
+	if (game_state == "game")
+	{
+		for (size_t i = 0; i < outBuffer.getNumFrames(); i++) {
 
-		SynthEngine.myOutputSample = SynthEngine.myNoise.noise() * (SynthEngine.noiseGain * SynthEngine.LFO1.phasor(4)) * 0.7;
-		SynthEngine.myOutputSample = SynthEngine.myOutputSample + (SynthEngine.sine1.sinewave(SynthEngine.sine1freq) * 0.25);
-		SynthEngine.myOutputSample = SynthEngine.myOutputSample + ((SynthEngine.sine2.triangle(SynthEngine.sine2freq)*SynthEngine.LFO2.sinewave(SynthEngine.LFOvalue * 10))* 0.25);
-		SynthEngine.myOutputSample = SynthEngine.myOutputSample + ((SynthEngine.sine3.saw(SynthEngine.sine3freq)*SynthEngine.LFO2.sinewave(SynthEngine.LFOvalue)) * 0.25);
-		SynthEngine.myOutputSample = SynthEngine.myFilter.lores(SynthEngine.myOutputSample, SynthEngine.filterCutoff, 4) * 0.5;
-		outBuffer.getSample(i, 0) = SynthEngine.myOutputSample;
-		outBuffer.getSample(i, 1) = SynthEngine.myOutputSample;
+			SynthEngine.myOutputSample = SynthEngine.myNoise.noise() * (SynthEngine.noiseGain * SynthEngine.LFO1.phasor(4)) * 0.7;
+			SynthEngine.myOutputSample = SynthEngine.myOutputSample + (SynthEngine.sine1.sinewave(SynthEngine.sine1freq) * 0.25);
+			SynthEngine.myOutputSample = SynthEngine.myOutputSample + ((SynthEngine.sine2.triangle(SynthEngine.sine2freq)*SynthEngine.LFO2.sinewave(SynthEngine.LFOvalue * 10))* 0.25);
+			SynthEngine.myOutputSample = SynthEngine.myOutputSample + ((SynthEngine.sine3.saw(SynthEngine.sine3freq)*SynthEngine.LFO2.sinewave(SynthEngine.LFOvalue)) * 0.25);
+			SynthEngine.myOutputSample = SynthEngine.myFilter.lores(SynthEngine.myOutputSample, SynthEngine.filterCutoff, 4) * 0.5;
+			outBuffer.getSample(i, 0) = SynthEngine.myOutputSample;
+			outBuffer.getSample(i, 1) = SynthEngine.myOutputSample;
+		}
+
+		unique_lock<mutex> lock(audioMutex);
+		lastBuffer = outBuffer;
+
 	}
 
-	unique_lock<mutex> lock(audioMutex);
-	lastBuffer = outBuffer;
 }
 
 //--------------------------------------------------------------
@@ -298,16 +309,21 @@ void ofApp::keyReleased(int key) {
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y) {
 
-	//	synth parameter control
-	int width = ofGetWidth();
-	float height = (float)ofGetHeight();
-	float heightPct = ((height - y) / height);
-	SynthEngine.noiseGain = heightPct;
-	SynthEngine.filterCutoff = 4000 * heightPct + 200;
-	SynthEngine.sine1freq = 150 + (10 * heightPct);
-	SynthEngine.sine2freq = 50 + (150 * (heightPct * 2));
-	SynthEngine.sine3freq = 148 + 10 * heightPct;
-	SynthEngine.LFOvalue = 100 + 2000 * heightPct;
+	if (game_state == "game")
+	{
+		//	synth parameter control
+		int width = ofGetWidth();
+		float height = (float)ofGetHeight();
+		float heightPct = ((height - y) / height);
+		SynthEngine.noiseGain = heightPct;
+		SynthEngine.filterCutoff = 4000 * heightPct + 200;
+		SynthEngine.sine1freq = 150 + (10 * heightPct);
+		SynthEngine.sine2freq = 50 + (150 * (heightPct * 2));
+		SynthEngine.sine3freq = 148 + 10 * heightPct;
+		SynthEngine.LFOvalue = 100 + 2000 * heightPct;
+
+	}
+
 }
 
 //--------------------------------------------------------------
