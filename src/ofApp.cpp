@@ -205,7 +205,9 @@ void ofApp::update() {
 void ofApp::draw() {
 	if (game_state == "start")
 	{
-
+		// Show start game instructions
+		ofClear(0);
+		ofDrawBitmapString("Press Any Key to Begin", 100, 100);
 	}
 	else if (game_state == "game")
 	{
@@ -268,6 +270,9 @@ void ofApp::draw() {
 	}
 	else if (game_state == "end")
 	{
+		// Show end game instructions
+		ofClear(0);
+		ofDrawBitmapString("Press Any Key to Restart", 100, 100);
 
 	}
 
@@ -315,6 +320,11 @@ void ofApp::keyReleased(int key) {
 	{
 		// blank for now
 		// game logic
+	}
+	else if (game_state == "end")
+	{
+		// We go to the start again if any key is pressed
+		game_state = "start";
 	}
 }
 
