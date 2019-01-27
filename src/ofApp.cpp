@@ -5,6 +5,8 @@ void ofApp::setup() {
 	// Start the game when the app begins
 	game_state = "start";
 	score = 0;
+	max_score = 200;
+	score_to_add = 10;
 	// Set up player with radius of 20
 	player_1.setup(20);
 
@@ -82,6 +84,8 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
 					c->setRadius(c->getRadius() + (float)10);
 					aData->bHit = true;
 					aData->bRend = false;
+
+					score += score_to_add;
 				}
 			}
 
@@ -128,11 +132,18 @@ void ofApp::update() {
 
 	if (game_state == "start")
 	{
+		score = 0;
 
 	}
 	else if (game_state == "game")
 	{
 		player_1.update();
+
+		// We check if the score is above the max value
+		if (score >= max_score)
+		{
+			game_state = "end";
+		}
 
 		//	synth audio thread
 		unique_lock<mutex> lock(audioMutex);
@@ -184,6 +195,7 @@ void ofApp::update() {
 	}
 	else if (game_state == "end")
 	{
+
 	}
 
 

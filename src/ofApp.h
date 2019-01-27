@@ -40,6 +40,8 @@ public:
 	// Setting up simple vars for the game
 	string game_state;
 	int score;
+	int max_score;
+	int score_to_add;
 	Player player_1;
 	
 	// synth
