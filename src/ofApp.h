@@ -16,6 +16,7 @@ public:
 	bool bRend;
 	int colourID;
 	int shapeID;
+	float shapeSize;
 	shared_ptr<ofxBox2dCircle> refCirc;
 };
 

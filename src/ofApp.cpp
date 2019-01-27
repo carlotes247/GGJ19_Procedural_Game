@@ -48,8 +48,9 @@ void ofApp::setup() {
 		sd->bIsPlayer = false;
 		sd->bRend = true;
 		sd->refCirc = c;
-		sd->colourID = rand() % 6;
+		sd->colourID = rand() % 8;
 		sd->shapeID = rand() % 3;
+		sd->shapeSize = ofRandom(10, 30);
 		circles.push_back(c);
 	}
 
@@ -63,7 +64,9 @@ void ofApp::setup() {
 	hd->bIsPlayer = true;
 	hd->bRend = true;
 	hd->refCirc = playerCircle;
+	hd->colourID = rand() % 8;
 	hd->shapeID = 0;
+	hd->shapeSize = ofRandom(10, 20);
 	circles.push_back(playerCircle);
 
 }
@@ -215,8 +218,9 @@ void ofApp::draw() {
 		player_1.draw();
 
 		// synth draw
-		ofBackground(ofColor(100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, SynthEngine.noiseGain));
-		ofSetColor(ofColor::purple);
+		//ofBackground(ofColor(100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, 100 * SynthEngine.noiseGain + 5, SynthEngine.noiseGain));
+		ofBackgroundGradient(ofColor(107, 146, 177), ofColor(154,165,167));
+		ofSetColor(ofColor::lightYellow);
 		ofSetLineWidth(1 + (rms * SynthEngine.noiseGain) * 0.1);
 		waveform.draw();
 
@@ -232,22 +236,28 @@ void ofApp::draw() {
 			int col = 0;
 			switch (data->colourID) {
 			case 0:
-				col = 0x9b42f4;
+				col = 0xe96e6e; // 0x9b42f4;
 				break;
 			case 1:
-				col = 0xd32828;
+				col = 0xf3d95b; //0xd32828;
 				break;
 			case 2:
-				col = 0x66e228;
+				col = 0x422a27; // 0x66e228;
 				break;
 			case 3:
-				col = 0xefdd15;
+				col = 0xfbcc44; // 0xefdd15;
 				break;
 			case 4:
-				col = 0x14ef85;
+				col = 0x26928f; // 0x14ef85;
 				break;
 			case 5:
-				col = 0x4368ad;
+				col = 0x823e61; // 0x4368ad;
+				break;
+			case 6:
+				col = 0x1d4231;
+				break;
+			case 7:
+				col = 0x1d3353;
 				break;
 			default:
 				col = 0xffffff;
@@ -262,24 +272,25 @@ void ofApp::draw() {
 			if (data->bRend) {
 				float x = circles[i].get()->getPosition().x;
 				float y = circles[i].get()->getPosition().y;
+				float size = data->shapeSize;
 				if (data->bIsPlayer == false) {
 					// (x, y) of center;
 		//random point 1 (top) 
-					float x1 = x + ofRandom(-20, 20);
-					float y1 = y + ofRandom(-100, 100);
+					float x1 = x + ofRandom(-20, 20) + size;
+					float y1 = y + ofRandom(-100, 100) + size;
 					//random point 2 (left)
-					float x2 = x + ofRandom(-50, -70);
-					float y2 = y + ofRandom(-70, 70);
+					float x2 = x + ofRandom(-50, -70) + size;
+					float y2 = y + ofRandom(-70, 70) + size;
 					//random point 3 (right)
-					float x3 = x + ofRandom(50, 70);
-					float y3 = y + ofRandom(-70, 70);
+					float x3 = x + ofRandom(50, 70) + size;
+					float y3 = y + ofRandom(-70, 70) + size;
 					switch (data->shapeID) {
 					case 0:
 						//circle
-						ofDrawCircle(x, y, ofRandom(10, 70));
+						ofDrawCircle(x, y, ofRandom(10, 70) + size);
 						break;
 					case 1:
-						ofDrawRectangle(x, y, ofRandom(-70, 70), ofRandom(-70, 70));
+						ofDrawRectangle(x, y, ofRandom(-70, 70) + size, ofRandom(-70, 70) + size);
 						//rectangle
 						break;
 					case 2:
@@ -288,7 +299,7 @@ void ofApp::draw() {
 						ofDrawTriangle(x1, y1, x2, y2, x3, y3);
 						break;
 					default:
-						ofDrawCircle(x, y, (float)40);
+						ofDrawCircle(x, y, (float)40 + size);
 						break;
 
 					}
